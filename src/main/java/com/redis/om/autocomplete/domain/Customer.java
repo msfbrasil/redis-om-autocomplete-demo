@@ -15,14 +15,20 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor(staticName = "of")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Document("airport")
-public class Airport {
+@Document("customer")
+public class Customer {
   @Id
   private String id;
+  @AutoCompletePayload("name") @NonNull
+  private Long customerId;
   @AutoComplete @NonNull
-  private String name;
+  private String customerName;
   @AutoCompletePayload("name") @NonNull
-  private String code;
+  private String customerStatus;
   @AutoCompletePayload("name") @NonNull
-  private String state;
+  private String primaryDocumentNumber;
+  @AutoCompletePayload("name") @NonNull
+  private Long operatorId;
+  @AutoCompletePayload("name") @NonNull
+  private String operatorName;
 }

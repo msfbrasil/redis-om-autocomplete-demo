@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080/airports';
+const AIRPORTS_BASE_URL = 'http://localhost:8080/airports';
 
 const AirportsAPI = function () { };
 
@@ -15,7 +15,7 @@ AirportsAPI.getSuggestions = async function (query) {
     redirect: 'follow'
   };
 
-  let actionUrl = `${BASE_URL}/search/${encodeURIComponent(query)}`;
+  let actionUrl = `${AIRPORTS_BASE_URL}/search/${encodeURIComponent(query)}`;
 
   const response = await fetch(actionUrl, requestOptions);
 

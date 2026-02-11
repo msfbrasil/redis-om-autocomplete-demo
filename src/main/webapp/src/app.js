@@ -3,16 +3,25 @@ import {createRoot} from 'react-dom/client';
 import Alert from 'react-bootstrap/Alert';
 import Autosuggest from 'react-autosuggest';
 import AirportsAPI from './services/airports_api';
+import CustomersAPI from './services/customers_api';
 
-async function getSuggestions(value) {
+async function getAirportSuggestions(value) {
   return await AirportsAPI.getSuggestions(value);
 }
 
-function getSuggestionValue(suggestion) {
+async function getCustomerSuggestions(value) {
+  return await CustomersAPI.getSuggestions(value);
+}
+
+function getAirportSuggestionValue(suggestion) {
   return suggestion.value;
 }
 
-function renderSuggestion(suggestion) {
+function getCustomerSuggestionValue(suggestion) {
+  return suggestion.value;
+}
+
+function renderAirportSuggestion(suggestion) {
   let payload = suggestion.payload;
 
   return (
@@ -25,70 +34,138 @@ function renderSuggestion(suggestion) {
   );
 }
 
+function renderCustomerSuggestion(suggestion) {
+  let payload = suggestion.payload;
+
+  return (
+    <div className='suggestion-content '>
+      <div className='react-autosuggest__section-title'><strong>{suggestion.value}</strong></div>
+      <div>
+        <span><strong>{payload.primaryDocumentNumber}</strong> - {payload.operatorName}</span>
+      </div>
+    </div>
+  );
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      value: '',
-      selected: '',
-      suggestions: [],
-      showSelection: false
+      airportValue: '',
+      airportSelected: '',
+      airportSuggestions: [],
+      airportShowSelection: false,
+      customerValue: '',
+      customerSelected: '',
+      customerSuggestions: [],
+      customerShowSelection: false
     };
   }
 
-  onChange = (event, { newValue, method }) => {
+  onAirportChange = (event, { newValue, method }) => {
     this.setState({
-      value: newValue,
-      showSelection: this.state.selected > 0,
+      airportValue: newValue,
+      airportShowSelection: this.state.airportSelected > 0,
+    });
+  };
+
+  onCustomerChange = (event, { newValue, method }) => {
+    this.setState({
+      customerValue: newValue,
+      customerShowSelection: this.state.customerSelected > 0,
     });
   };
 
   // Suggestion rerender when user types
-  onSuggestionsFetchRequested = ({ value }) => {
-    getSuggestions(value)
+  onAirportSuggestionsFetchRequested = ({ value }) => {
+    getAirportSuggestions(value)
       .then(data => {
         this.setState({
-          suggestions: data
+          airportSuggestions: data
         });
       })
   };
 
-  onSuggestionsClearRequested = () => {
+  // Suggestion rerender when user types
+  onCustomerSuggestionsFetchRequested = ({ value }) => {
+    getCustomerSuggestions(value)
+      .then(data => {
+        this.setState({
+          customerSuggestions: data
+        });
+      })
+  };
+
+  onAirportSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: []
+      airportSuggestions: []
     });
   };
 
-  onSuggestionSelected = (event, { suggestion }) => {
+  onCustomerSuggestionsClearRequested = () => {
+    this.setState({
+      customerSuggestions: []
+    });
+  };
+
+  onAirportSuggestionSelected = (event, { suggestion }) => {
     let payload = suggestion.payload;
     this.setState({
-      selected: `${payload.code} (${payload.state})`,
-      showSelection: true
+      airportSelected: `${payload.code} (${payload.state})`,
+      airportShowSelection: true
+    });
+  };
+
+  onCustomerSuggestionSelected = (event, { suggestion }) => {
+    let payload = suggestion.payload;
+    this.setState({
+      customerSelected: `${payload.primaryDocumentNumber} (${payload.operatorName})`,
+      customerShowSelection: true
     });
   };
 
   render() {
-    const { value, suggestions } = this.state;
-    const inputProps = {
+    const { airportValue, airportSuggestions, customerValue, customerSuggestions } = this.state;
+    const airportInputProps = {
       placeholder: "Search by Airport Name...",
-      value,
-      onChange: this.onChange,
+      value: airportValue,
+      onChange: this.onAirportChange,
+      className: "form-control form-control-lg form-control-borderless"
+    };
+    const customerInputProps = {
+      placeholder: "Search by Customer Name...",
+      value: customerValue,
+      onChange: this.onCustomerChange,
       className: "form-control form-control-lg form-control-borderless"
     };
 
     return (
       <div>
+      <div>
         <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          onSuggestionSelected={this.onSuggestionSelected}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps} />
+          suggestions={airportSuggestions}
+          onSuggestionsFetchRequested={this.onAirportSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onAirportSuggestionsClearRequested}
+          onSuggestionSelected={this.onAirportSuggestionSelected}
+          getSuggestionValue={getAirportSuggestionValue}
+          renderSuggestion={renderAirportSuggestion}
+          inputProps={airportInputProps} />
         <br/>
-        {this.state.showSelection && <Alert variant="success">{this.state.selected}</Alert>}
+        {this.state.airportShowSelection && <Alert variant="success">{this.state.airportSelected}</Alert>}
+      </div>
+      <div>
+        <Autosuggest
+          suggestions={customerSuggestions}
+          onSuggestionsFetchRequested={this.onCustomerSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onCustomerSuggestionsClearRequested}
+          onSuggestionSelected={this.onCustomerSuggestionSelected}
+          getSuggestionValue={getCustomerSuggestionValue}
+          renderSuggestion={renderCustomerSuggestion}
+          inputProps={customerInputProps} />
+        <br/>
+        {this.state.customerShowSelection && <Alert variant="success">{this.state.customerSelected}</Alert>}
+      </div>
       </div>
     );
   }
