@@ -56,11 +56,11 @@ public class AutocompleteApplication {
         String[] currentLineTokens = currentLine.split(",");
         if ( currentLineTokens.length == 6) {
           customersData.add(Customer.of(
-                  //Long.valueOf(currentLineTokens[0]),
+                  Long.valueOf(currentLineTokens[0]),
                   currentLineTokens[1].replaceAll("\"", ""),
-                  //currentLineTokens[2].replaceAll("\"", ""),
+                  currentLineTokens[2].replaceAll("\"", ""),
                   currentLineTokens[3].replaceAll("\"", ""),
-                  //Long.valueOf(currentLineTokens[4]),
+                  Long.valueOf(currentLineTokens[4]),
                   currentLineTokens[5].replaceAll("\"", "")));
           storedRecords.getAndIncrement();
         } else {

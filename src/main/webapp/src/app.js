@@ -41,7 +41,7 @@ function renderCustomerSuggestion(suggestion) {
     <div className='suggestion-content '>
       <div className='react-autosuggest__section-title'><strong>{suggestion.value}</strong></div>
       <div>
-        <span><strong>{payload.primaryDocumentNumber}</strong> - {payload.operator}</span>
+        <span><strong>{payload.primaryDocumentNumber}</strong> - {payload.operatorName}</span>
       </div>
     </div>
   );
@@ -120,7 +120,7 @@ class App extends React.Component {
   onCustomerSuggestionSelected = (event, { suggestion }) => {
     let payload = suggestion.payload;
     this.setState({
-      customerSelected: `${payload.primaryDocumentNumber} (${payload.operator})`,
+      customerSelected: `${payload.primaryDocumentNumber} (${payload.operatorName})`,
       customerShowSelection: true
     });
   };

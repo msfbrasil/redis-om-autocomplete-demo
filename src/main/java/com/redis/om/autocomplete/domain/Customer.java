@@ -19,10 +19,16 @@ import lombok.RequiredArgsConstructor;
 public class Customer {
   @Id
   private String id;
+  @AutoCompletePayload("name") @NonNull
+  private Long customerId;
   @AutoComplete @NonNull
-  private String name;
+  private String customerName;
+  @AutoCompletePayload("name") @NonNull
+  private String customerStatus;
   @AutoCompletePayload("name") @NonNull
   private String primaryDocumentNumber;
   @AutoCompletePayload("name") @NonNull
-  private String operator;
+  private Long operatorId;
+  @AutoCompletePayload("name") @NonNull
+  private String operatorName;
 }

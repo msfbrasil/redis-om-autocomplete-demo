@@ -37,7 +37,7 @@ public class CustomersController {
   @GetMapping("/search/{q}")
   public List<Suggestion> query(@PathVariable("q") String query) {
     List<Suggestion> suggestions = repository //
-        .autoCompleteName(query, AutoCompleteOptions.get().withPayload());
+        .autoCompleteCustomerName(query, AutoCompleteOptions.get().withPayload());
     return suggestions;
   }
 
