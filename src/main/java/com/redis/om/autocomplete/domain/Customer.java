@@ -22,7 +22,7 @@ public class Customer {
   @AutoCompletePayload("name") @NonNull
   private Long customerId;
   @AutoComplete @NonNull
-  private String customerName;
+  private String name;
   @AutoCompletePayload("name") @NonNull
   private String customerStatus;
   @AutoCompletePayload("name") @NonNull
